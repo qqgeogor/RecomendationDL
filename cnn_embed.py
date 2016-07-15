@@ -105,7 +105,7 @@ if __name__ == '__main__':
     # flatten_1 = Flatten()(merge_ui)
     def max_1d(X):
         return K.max(X, axis=1)
-    
+
     lambda_1u = Lambda(max_1d, output_shape=(128,))(conv_1u)
     lambda_1i = Lambda(max_1d, output_shape=(128,))(conv_1i)
 
@@ -128,24 +128,24 @@ if __name__ == '__main__':
 
     nb_epoch = 10
     batch_size = 1024*6
-    load_model = False
+    load_model = True
 
     if load_model:
         model.load_weights(path+model_name)
-
     
-    model.fit([u_train,i_train], y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, shuffle=True,
-                      callbacks=[model_checkpoint],
-                      validation_data=([u_test,i_test],y_test)
-                      )
-
     
-
+    # model.fit([u_train,i_train], y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, shuffle=True,
+    #                   callbacks=[model_checkpoint],
+    #                   validation_data=([u_test,i_test],y_test)
+    #                   )
+    
+    
+    
     u_test,i_test = test[:,0],test[:,1]
     y_preds = model.predict([u_test,i_test])
-
+    
     d = {'score':y_preds}
-    submission = DataFrame(data=d)
+    submission = pd.DataFrame(data=d)
     submission.to_csv(path+"submission.csv",index=False)
 
 
