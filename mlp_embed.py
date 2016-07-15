@@ -11,15 +11,16 @@ from keras import backend as K
 from keras.layers import Input, Embedding, LSTM, Dense,Flatten, Dropout, merge,Convolution1D,MaxPooling1D,Lambda
 from keras.models import Model
 from keras.utils.visualize_util import plot
+from ml_metrics import rmse
 seed = 1024
 np.random.seed(seed)
 
 if __name__ == '__main__':
-
+    
     path = "E:\\RSdata\\"
     features = ['uid','iid']
     score = 'score'
-
+    
     X_train = pd.read_csv(path+"X_train.csv")
     X_test = pd.read_csv(path+"X_test.csv")
     test = pd.read_csv(path+"test.csv")

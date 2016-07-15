@@ -73,13 +73,14 @@ if __name__ == '__main__':
     iinput = Input(shape=(1,), dtype='int32')
 
     embed_u = Embedding(
-                    num_u,
-                    256,
+                    output_dim=128, 
+                    input_dim=num_u,
                     # dropout=0.0
                     input_length=1,
                     )(uinput)
-    embed_i = Embedding(num_i,
-                    256,
+    embed_i = Embedding(
+                    output_dim=128, 
+                    input_dim=num_i,
                     # dropout=0.0
                     input_length=1,
                     )(iinput)
@@ -98,12 +99,13 @@ if __name__ == '__main__':
 
     # pool_1u = MaxPooling1D(pool_length=2)(conv_1u)
     # pool_1i = MaxPooling1D(pool_length=2)(conv_1i)
-
-
-
-    # merge_ui =  merge([pool_1u,pool_1i],mode="concat")
-
-    # flatten_1 = Flatten()(merge_ui)
+    
+    # flatten_1u = Flatten()(pool_1u)
+    # flatten_1i = Flatten()(pool_1i)
+    
+    # merge_ui =  merge([flatten_1u,flatten_1i],mode="concat")
+    
+    
     def max_1d(X):
         return K.max(X, axis=1)
 
@@ -129,16 +131,16 @@ if __name__ == '__main__':
 
     nb_epoch = 10
     batch_size = 1024*6
-    load_model = True
-    
+    load_model = False
+
     if load_model:
         model.load_weights(path+model_name)
 
     
-    # model.fit([u_train,i_train], y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, shuffle=True,
-    #                   callbacks=[model_checkpoint],
-    #                   validation_data=([u_test,i_test],y_test)
-    #                   )
+    model.fit([u_train,i_train], y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, shuffle=True,
+                      callbacks=[model_checkpoint],
+                      validation_data=([u_test,i_test],y_test)
+                      )
     y_preds = model.predict([u_test,i_test])
     score = rmse(y_test,y_preds)
     print('rmse score',score)
