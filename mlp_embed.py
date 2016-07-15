@@ -118,38 +118,40 @@ if __name__ == '__main__':
     dp1 = Dropout(0.5)(fc1)
     fc2 = Dense(64,activation='relu')(dp1)
     dp2 = Dropout(0.2)(fc2)
-    
+
     output = Dense(1)(dp2)
-    
+
     model = Model(input=[uinput, iinput], output=output)
     model.compile(optimizer='rmsprop',
               loss='mse')
-    
+
     model_name = 'mlp.hdf5'
     model_checkpoint = ModelCheckpoint(path+model_name, monitor='loss', save_best_only=True)
     plot(model, to_file=path+'%s.png'%model_name.replace('.hdf5',''),show_shapes=True)
-    
-    
+
+
     nb_epoch = 10
     batch_size = 1024*6
-    load_model = False
-    
+    load_model = True
+
     if load_model:
         model.load_weights(path+model_name)
+
     
+    # model.fit([u_train,i_train], y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, shuffle=True,
+    #                   callbacks=[model_checkpoint],
+    #                   validation_data=([u_test,i_test],y_test)
+    #                   )
     
-    model.fit([u_train,i_train], y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, shuffle=True,
-                      callbacks=[model_checkpoint],
-                      validation_data=([u_test,i_test],y_test)
-                      )
-    
-    
+    y_preds = model.predict([u_test,i_test])
+    score = rmse(y_test,y_preds)
+    print('rmse score',score)
     
     u_test,i_test = test[:,0],test[:,1]
     y_preds = model.predict([u_test,i_test])
     
     d = {'score':y_preds}
-    submission = DataFrame(data=d)
+    submission = pd.DataFrame(data=d)
     submission.to_csv(path+"submission.csv",index=False)
 
 

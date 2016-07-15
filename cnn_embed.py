@@ -11,6 +11,7 @@ from keras import backend as K
 from keras.layers import Input, Embedding, LSTM, Dense,Flatten, Dropout, merge,Convolution1D,MaxPooling1D,Lambda
 from keras.models import Model
 from keras.utils.visualize_util import plot
+from ml_metrics import rmse
 seed = 1024
 np.random.seed(seed)
 
@@ -129,21 +130,23 @@ if __name__ == '__main__':
     nb_epoch = 10
     batch_size = 1024*6
     load_model = True
-
+    
     if load_model:
         model.load_weights(path+model_name)
-    
+
     
     # model.fit([u_train,i_train], y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, shuffle=True,
     #                   callbacks=[model_checkpoint],
     #                   validation_data=([u_test,i_test],y_test)
     #                   )
-    
+    y_preds = model.predict([u_test,i_test])
+    score = rmse(y_test,y_preds)
+    print('rmse score',score)
     
     
     u_test,i_test = test[:,0],test[:,1]
     y_preds = model.predict([u_test,i_test])
-    
+
     d = {'score':y_preds}
     submission = pd.DataFrame(data=d)
     submission.to_csv(path+"submission.csv",index=False)
