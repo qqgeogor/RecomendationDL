@@ -33,10 +33,6 @@ if __name__ == '__main__':
 
     test = test[features].values
 
-    
-
-    
-    
     X = np.concatenate([X_train,X_test,test])
 
     user_le = LabelEncoder()
@@ -96,7 +92,7 @@ if __name__ == '__main__':
                         border_mode='same',
                         activation='relu',
                         subsample_length=1)(embed_i)
-
+    
     # pool_1u = MaxPooling1D(pool_length=2)(conv_1u)
     # pool_1i = MaxPooling1D(pool_length=2)(conv_1i)
     
@@ -108,12 +104,12 @@ if __name__ == '__main__':
     
     def max_1d(X):
         return K.max(X, axis=1)
-
+        
     lambda_1u = Lambda(max_1d, output_shape=(128,))(conv_1u)
     lambda_1i = Lambda(max_1d, output_shape=(128,))(conv_1i)
-
+    
     merge_ui =  merge([lambda_1u,lambda_1i],mode="concat")
-
+    
     fc1 = Dense(512,activation='relu')(merge_ui)
     dp1 = Dropout(0.5)(fc1)
     fc2 = Dense(64,activation='relu')(dp1)
