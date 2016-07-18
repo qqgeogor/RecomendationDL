@@ -162,6 +162,11 @@ class UserMRF(MRF):
         # return neighbour_user
 
 
+    def gradient(self,u,i,j):
+        pass
+        
+
+
     def fit(self,X,y):
 
         self.user_le = LabelEncoder()

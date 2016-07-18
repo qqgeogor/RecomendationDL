@@ -38,22 +38,63 @@ def main():
     # X_test.to_csv(path+"X_test.csv",index=False)
 
 
-    X_train = pd.read_csv(path+"X_train.csv")
-    X_test = pd.read_csv(path+"X_test.csv")
-    test = pd.read_csv(path+"test.csv")
-    # print X_train.head
+    # X_train = pd.read_csv(path+"X_train.csv")
+    # X_test = pd.read_csv(path+"X_test.csv")
+    # test = pd.read_csv(path+"test.csv")
+    # # print X_train.head
     
-    X_train = X_train[:100000]
-    X_test = X_test[:100000]
+    # X_train = X_train[:1000000]
+    # X_test = X_test[:100000]
     
-    features = ['uid','iid']
-    score = 'score'
-    y_train = X_train[score].values
-    X_train = X_train[features].values
+    # features = ['uid','iid']
+    # score = 'score'
+    # y_train = X_train[score].values
+    # X_train = X_train[features].values
 
-    y_test = X_test[score].values
-    X_test = X_test[features].values
+    # y_test = X_test[score].values
+    # X_test = X_test[features].values
 
+    X_train = [
+        [0,1],
+        [0,2],
+        [0,3],
+        [0,4],
+        [1,1],
+        [1,2],
+        [1,3],
+        [2,1],
+        [2,3],
+        [2,4],
+    ]
+    y_train = [
+        1,
+        2,
+        3,
+        4,
+        1,
+        2,
+        3,
+        1,
+        3,
+        4,
+    ]
+
+    X_test = [
+        [1,4],
+        [2,2]
+    ]
+
+    y_test = [
+        4,
+        2
+    ]
+    
+    X_train = np.array(X_train)
+    X_test = np.array(X_test)
+    
+    y_train = np.array(y_train)
+    y_test = np.array(y_test)
+    
     model = mrf.UserMRF()
     model.fit(X_train,y_train)
     # pd.to_pickle(model,path+'usermrf.pkl')
